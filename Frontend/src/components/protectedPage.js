@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { axiosInstance } from '../axios';
 import { userBaseUrl } from '../utils/const';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import logoImage from './../../src/logo copy.svg';
 import Button from 'react-bootstrap/Button';
@@ -15,7 +15,7 @@ import { usersFetchFailure, usersFetchSuccess } from '../Redux/users/usersAction
 
 function ProtectedPage({ children }) {
 
-    // const user = useSelector(value => value.users.users);
+    const user = useSelector(value => value.users?.users);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -79,6 +79,7 @@ function ProtectedPage({ children }) {
                                 <Nav.Link href="#action2">News</Nav.Link><NavDropdown />
                                 <Nav.Link href="#action2">Shop</Nav.Link><NavDropdown />
                                 <Nav.Link href="#action2">Support</Nav.Link><NavDropdown />
+                                <h5 className='name'>Welcome  {user?.data?.name.toUpperCase()}</h5>
                             </Nav>
                                 <div>
                                     <Button variant="outline-primary" size='md' className='me-4' onClick={() => navigate('/profile')}>

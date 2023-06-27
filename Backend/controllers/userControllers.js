@@ -1,7 +1,7 @@
 
 const userModel = require("../Models/user");
 const jwt = require("jsonwebtoken");
-const path = require('path');
+const cloudinary = require('../config/cloudinary');
 
 
 module.exports = {
@@ -12,6 +12,7 @@ module.exports = {
         });
         console.log(user);
         const userDetails = req.body;
+        userDetails.profilePic = 'https://img.freepik.com/free-icon/user_318-159711.jpg'
         if (!user) {
             userModel.create({ ...userDetails }).then((data) => {
                 const name = data.name;
@@ -32,8 +33,6 @@ module.exports = {
 
     LogIn: async (req, res) => {
 
-        console.log(req.body,"Verind ellam");
-
         const user = await userModel.findOne({
             email: req.body.email,
         })
@@ -47,7 +46,7 @@ module.exports = {
                 const name = user.name;
                 const phone = user.phone;
                 const email = user.phone;
-                console.log(token);
+                
                 res.send({ success: true, name: name, token: token, phone: phone, email: email });
             } else {
                 res.send({ passErr: "Invalid password" })
@@ -63,6 +62,7 @@ module.exports = {
 
         try {
             const user = await userModel.findById({ _id: req.body.userId });
+            console.log(user);
             res.send({
                 success: true,
                 message: "user fetched success",
@@ -95,11 +95,20 @@ module.exports = {
 
         console.log("vanuu");
         try {
+
             // Access the uploaded file using req.file
             const file = req.file;
             console.log(file,"upload file");
-
+            let result = await cloudinary.uploader.upload(file.path);
+            console.log(' Image uploaded ----- ', result );
             const filename = file.filename;
+            userModel.updateOne({_id: req.body.userId},{profilePic: result.url}).then((res)=>{
+                console.log(res);
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+            
             console.log(filename,"file name");
 
             if (!file) {
@@ -111,20 +120,8 @@ module.exports = {
                 return;
             }
 
-            const storagePath = '/uploads';
-            // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-            // const extension = path.extname(file.filename);
-            // const filename = 'profilepic-' + uniqueSuffix + extension;
-            // const filePath = path.join(storagePath, filename);
-            // console.log(filePath,"file uploaded");
-
             const userId = req.body.userId;
             console.log(userId, "user id here");
-
-            await userModel.findByIdAndUpdate(
-               userId,
-                { $set: { profilePic: '/' + filename }} 
-            );
 
             res.send({
                 success: true,

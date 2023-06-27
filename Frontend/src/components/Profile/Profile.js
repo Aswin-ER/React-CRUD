@@ -11,14 +11,11 @@ import { updateUserProfilePic } from '../../Redux/users/usersAction'; // Import 
 
 export default function Profile() {
 
-    const user = useSelector(value => value.users.users.data);
+    const user = useSelector(value => value.users?.users?.data);
 
     const dispatch = useDispatch();
 
-    // console.log(user,"profile");
-
     const handleImageUpload = async (data) => {
-
         const userId = user._id;
         
         try {
@@ -33,6 +30,7 @@ export default function Profile() {
                     console.log(response.data.filename, "image uploaded successfully");
                     dispatch(updateUserProfilePic(response.data.filename));
                     setProfilePic(response.data.path);
+                    window.location.href = '/profile'
                 } else {    
                     throw new Error('profile picture upload failed !!');
                 }
@@ -45,9 +43,8 @@ export default function Profile() {
 
 
 
-    const selectProfilePic = value => value.users.users.data.profilePic;
+    const selectProfilePic = value => value.users?.users?.data?.profilePic;
     const profilePic = useSelector(selectProfilePic);
-    // console.log(profilePic,"profilePic");
 
 
     const [profile, setProfilePic] = useState(profilePic);
@@ -89,25 +86,16 @@ export default function Profile() {
                                                 position: 'relative',
                                             }}
                                             onClick={() => imageUploader.current.click()}>
-                                            {profile ? (
                                                 <img
                                                     ref={uploadedImage}
                                                     src={profile}
                                                     alt="Avatar"
                                                     style={{ width: '100%', height: '100%', position: 'absolute' }}
                                                 />
-                                            ) : (
-                                                <img
-                                                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                                                    alt="Avatar"
-                                                    style={{ width: '100%', height: '100%', position: 'absolute' }}
-                                                />
-                                            )}
                                         </div>
                                         <input
                                             type="file"
                                             accept="image/*"
-                                            // onChange={handleImageUpload}
                                             onChange={(e) => handleImageUpload(e.target.files[0])}
                                             ref={imageUploader}
                                             style={{ display: 'none' }}
@@ -118,7 +106,7 @@ export default function Profile() {
                                     </MDBCol>
                                     <MDBCol md="8">
                                         <MDBCardBody className="p-4">
-                                            <MDBTypography tag="h6">Information</MDBTypography>
+                                            <MDBTypography tag="h6">User Information</MDBTypography>
                                             <hr className="mt-0 mb-4" />
                                             <MDBRow className="pt-1">
                                                 <MDBCol size="6" className="mb-3">
@@ -130,13 +118,11 @@ export default function Profile() {
                                                     <MDBCardText className="text-muted">{ phone }</MDBCardText>
                                                 </MDBCol>
                                             </MDBRow>
-    
-                                            <MDBTypography tag="h6">Information</MDBTypography>
                                             <hr className="mt-0 mb-4 " />
                                             <MDBRow className="pt-1">
                                                 <MDBCol size="6" className="mb-3">
-                                                    <MDBTypography tag="h6">Email</MDBTypography>
-                                                    <MDBCardText className="text-muted">{name }</MDBCardText>
+                                                    <MDBTypography tag="h6">Name</MDBTypography>
+                                                    <MDBCardText className="text-muted">{name?.toUpperCase() }</MDBCardText>
                                                 </MDBCol>
                                             </MDBRow>
     
