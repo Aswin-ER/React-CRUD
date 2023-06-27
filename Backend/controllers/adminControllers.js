@@ -1,6 +1,6 @@
 const adminModel = require("../Models/admin");
 const userModel = require("../Models/user");
-
+const jwt = require("jsonwebtoken");
 
 
 module.exports = {
@@ -11,8 +11,11 @@ module.exports = {
 
         if(admin.email === req.body.email){
             if(admin.password === req.body.password){
-                console.log("success")
-                res.send({success: true});
+                let token;
+                token = jwt.sign({
+                    adminId: admin.password}, process.env.JWT_SECRET,{expiresIn: "1h"}
+                    );
+                res.send({success: true, token: token}); 
             }else{
                 res.send({passErr: "Invalid password"})
             }
@@ -23,12 +26,13 @@ module.exports = {
     },
 
     getUser: async (req, res)=> {
-        const users=await userModel.find()
+        const users=await userModel.find().exec();
         res.send(users)
     },
 
     editUser: async (req, res) => {
         const { id } = req.params;
+        console.log(req.body)
         const { name, email, phone } = req.body;
       
         try {
@@ -61,6 +65,31 @@ module.exports = {
           console.error(error);
           res.status(500).send('Internal Server Error');
         }
+      },
+
+      searchUser: async (req, res)=> {
+
+        const  name = req.body.search;
+        console.log(name);
+        try {
+          const users = await userModel.find({ name: { $regex: name, $options: 'i' } });
+          res.send(users);
+        } catch (error) {
+          console.error(error);
+          res.send('Internal Server Error');
+        }
+        
+      },
+
+      logout:(req, res)=> {
+
+        const blacklist = [];
+
+        const token = req.headers.authorization || req.body.token;
+
+        console.log(token, "token admin log out avum");
+        blacklist.push(token);
+        res.send({ success: true, message:'Logged out successfully'});
       }
 
 }

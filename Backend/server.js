@@ -1,8 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const morgan = require('morgan');
-const noCache = require('nocache');
+require('dotenv').config();
 
 const userRouter = require('./Routes/userRouter');
 const adminRouter = require('./Routes/adminRouter');
@@ -10,10 +9,8 @@ const adminRouter = require('./Routes/adminRouter');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(morgan('dev'));
 app.use(express.json());
 app.use(cors());
-app.use(noCache());
 
 mongoose.connect('mongodb://127.0.0.1:27017/web').then(()=> {
     console.log('DB connection established');
