@@ -14,7 +14,7 @@ router.post('/logout',  userControllers.logout);
 
 router.get('/', userAuth, userControllers.getUser);
 
-router.get('/profile', upload.single('image'),  userAuth, userControllers.uploadProfilepic);
+router.post('/upload', upload.single('image'), userControllers.uploadProfilepic);
 
 
 

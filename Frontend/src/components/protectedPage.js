@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { axiosInstance } from '../axios';
 import { userBaseUrl } from '../utils/const';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import logoImage from './../../src/logo copy.svg';
 import Button from 'react-bootstrap/Button';
@@ -14,9 +14,12 @@ import { usersFetchFailure, usersFetchSuccess } from '../Redux/users/usersAction
 
 
 function ProtectedPage({ children }) {
-    const user = useSelector(value => value.users.users);
+
+    // const user = useSelector(value => value.users.users);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
 
     const validateToken =  () => {
         axiosInstance.get(`${userBaseUrl}`)
@@ -49,11 +52,11 @@ function ProtectedPage({ children }) {
 
     const handleClick = ()=> {
         localStorage.removeItem('jwtToken');
+        localStorage.removeItem('user');
         navigate('/login');
       }
 
     return (
-        user && (
             <>
                 <div className='headerParentDiv'>
                     <div className='headerChildDiv'>
@@ -76,9 +79,7 @@ function ProtectedPage({ children }) {
                                 <Nav.Link href="#action2">News</Nav.Link><NavDropdown />
                                 <Nav.Link href="#action2">Shop</Nav.Link><NavDropdown />
                                 <Nav.Link href="#action2">Support</Nav.Link><NavDropdown />
-                                <h3 className='name'>Welcome {user.name ? user.name : 'guest'}</h3>
                             </Nav>
-                            {user ? (
                                 <div>
                                     <Button variant="outline-primary" size='md' className='me-4' onClick={() => navigate('/profile')}>
                                         Profile
@@ -89,21 +90,11 @@ function ProtectedPage({ children }) {
                                     </Button>
                                 </div>
 
-                            ) : (
-                                <Button variant="outline-primary" onClick={() => navigate('/signup')} size='md' className='me-4'>
-                                    Signin
-                                </Button>
-                            )}
-                            {
-                                user ? "" :
-                                    <Button variant="outline-primary" size='md' onClick={() => navigate('/login')}>Login</Button>
-                            }
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
             { children }
             </>
-        )
     )
 }
 

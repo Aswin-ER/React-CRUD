@@ -2,52 +2,38 @@
 import React, { useEffect, useState } from 'react'
 import './Profile.css'
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { axiosInstance } from '../../axios';
 import { userBaseUrl } from '../../utils/const';
+import { updateUserProfilePic } from '../../Redux/users/usersAction'; // Import the action from your userActions file
+
 
 
 export default function Profile() {
 
     const user = useSelector(value => value.users.users.data);
-    console.log("%^&*()_(*&^%$^&*()_", user);
 
-    const [profilePic, setProfilePic] = useState(user?.profilePic);
-    const [name, setName] = useState(user?.name);
-    const [email, setEmail] = useState(user?.email);
-    const [phone, setPhone] = useState(user?.phone);
+    const dispatch = useDispatch();
 
-    const uploadedImage = React.useRef(null);
-    const imageUploader = React.useRef(null);
+    // console.log(user,"profile");
 
-    // const [image, setImage] = useState(null);
-
-    // const handleImageUpload = e => {
-    //     const [file] = e.target.files;
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onload = e => {
-    //             setImage(reader.result);
-    //         };
-
-    //         reader.readAsDataURL(file);
-    //     }
-    // };
-
-    // handle-profile-picture upload
     const handleImageUpload = async (data) => {
+
+        const userId = user._id;
+        
         try {
+
             const formdata = new FormData();
             formdata.append("image", data);
+            formdata.append("userId", userId);
 
-            axiosInstance.post(`${userBaseUrl}/upload`, data, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then((response) => {
-                if (response.success) {
-                    setProfilePic(response.data);
-                } else {
+            axiosInstance.post(`${userBaseUrl}/upload`, formdata).then((response) => {
+                if (response.data.success) {
+                    console.log(response.data, "image uploaded successfully");
+                    console.log(response.data.filename, "image uploaded successfully");
+                    dispatch(updateUserProfilePic(response.data.filename));
+                    setProfilePic(response.data.path);
+                } else {    
                     throw new Error('profile picture upload failed !!');
                 }
             })
@@ -57,12 +43,28 @@ export default function Profile() {
         }   
     }
 
+
+
+    const selectProfilePic = value => value.users.users.data.profilePic;
+    const profilePic = useSelector(selectProfilePic);
+    // console.log(profilePic,"profilePic");
+
+
+    const [profile, setProfilePic] = useState(profilePic);
+    const [name, setName] = useState(user?.name);
+    const [email, setEmail] = useState(user?.email);
+    const [phone, setPhone] = useState(user?.phone);
+
+    const uploadedImage = React.useRef(null);
+    const imageUploader = React.useRef(null);
+
+
     useEffect(()=> {
-        setProfilePic(user?.profilePic);
+        setProfilePic(profilePic);
         setName(user?.name);
         setEmail(user?.email);
         setPhone(user?.phone);
-    }, [user]);
+    }, [user, profilePic]);
 
 
     return (
@@ -87,10 +89,10 @@ export default function Profile() {
                                                 position: 'relative',
                                             }}
                                             onClick={() => imageUploader.current.click()}>
-                                            {profilePic ? (
+                                            {profile ? (
                                                 <img
                                                     ref={uploadedImage}
-                                                    src={profilePic}
+                                                    src={profile}
                                                     alt="Avatar"
                                                     style={{ width: '100%', height: '100%', position: 'absolute' }}
                                                 />

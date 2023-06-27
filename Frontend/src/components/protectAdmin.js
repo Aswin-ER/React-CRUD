@@ -40,17 +40,17 @@ function AdminProtectedPage({ children }) {
             <span style={{color: 'white'}}> ENGLISH </span>
           </div>
   
-          <div  onClick={ () => {
-                                localStorage.removeItem('admintoken');
-                                localStorage.removeItem('admin');
-                                navigate('/admin');
-                            }} className="sellMenu">
+          <div  onClick={ ()=> {
+             localStorage.removeItem('admintoken');
+             localStorage.removeItem('admin');
+             navigate('/admin');
+          }} className="sellMenu">
             <SellButton></SellButton>
-            <div onClick={() => {
-                                localStorage.removeItem('admintoken');
-                                localStorage.removeItem('admin');
-                                navigate('/admin');
-                            }} className="sellMenuContent">
+            <div onClick={()=> {
+               localStorage.removeItem('admintoken');
+               localStorage.removeItem('admin');
+               navigate('/admin');
+            }} className="sellMenuContent">
               <span>Logout</span>
             </div>
           </div>

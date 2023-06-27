@@ -1,7 +1,6 @@
 
 const userModel = require("../Models/user");
 const jwt = require("jsonwebtoken");
-const upload = require("../config/multer");
 const path = require('path');
 
 
@@ -29,7 +28,7 @@ module.exports = {
             res.send({ err: 'User already exists' });
         }
     },
-    
+
 
     LogIn: async (req, res) => {
 
@@ -48,7 +47,7 @@ module.exports = {
                 const name = user.name;
                 const phone = user.phone;
                 const email = user.phone;
-                console.log(name);
+                console.log(token);
                 res.send({ success: true, name: name, token: token, phone: phone, email: email });
             } else {
                 res.send({ passErr: "Invalid password" })
@@ -60,7 +59,8 @@ module.exports = {
 
     getUser: async (req, res) => {
 
-        console.log("working....", req.body._id);
+        console.log("working....", req.body.userId);
+
         try {
             const user = await userModel.findById({ _id: req.body.userId });
             res.send({
@@ -92,10 +92,18 @@ module.exports = {
 
 
     uploadProfilepic: async (req, res) => {
+
+        console.log("vanuu");
         try {
             // Access the uploaded file using req.file
             const file = req.file;
+            console.log(file,"upload file");
+
+            const filename = file.filename;
+            console.log(filename,"file name");
+
             if (!file) {
+                console.log(file,"upload failed");
                 res.status(400).send({
                     success: false,
                     message: "No file uploaded"
@@ -103,35 +111,30 @@ module.exports = {
                 return;
             }
 
-            // Modify the file storage path and filename as needed
-            const storagePath = 'uploads/profilepics/'; // Specify the storage folder for profile pictures
-            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-            const extension = path.extname(file.originalname);
-            const filename = 'profilepic-' + uniqueSuffix + extension;
-            const filePath = storagePath + filename;
+            const storagePath = '/uploads';
+            // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            // const extension = path.extname(file.filename);
+            // const filename = 'profilepic-' + uniqueSuffix + extension;
+            // const filePath = path.join(storagePath, filename);
+            // console.log(filePath,"file uploaded");
 
-            // Move the uploaded file to the storage path using the configured Multer instance
-            await upload.single('profilePic')(req, res, (err) => {
-                if (err) {
-                    throw new Error(err.message);
-                }
-            });
+            const userId = req.body.userId;
+            console.log(userId, "user id here");
 
-            // Update the user profile picture in the database
-            await userModel.updateOne(
-                { _id: req.body.userId },
-                { profilePic: filePath }
+            await userModel.findByIdAndUpdate(
+               userId,
+                { $set: { profilePic: '/' + filename }} 
             );
 
             res.send({
                 success: true,
                 message: "Profile picture uploaded successfully",
-                data: filePath
+                data: filename
             });
         } catch (err) {
             res.status(500).send({
                 success: false,
-                message: err.message
+                message: 'error'
             });
         }
     }

@@ -23,10 +23,9 @@ function Login() {
       axiosInstance.post(`${userBaseUrl}/login`, {email: email, password: password}).then((response)=> {
             console.log(response);
             if(response.data.success) {
-              console.log(response.data, "mistake");
                 localStorage.setItem('jwtToken', JSON.stringify(response.data.token));
-                localStorage.setItem('userDetails', JSON.stringify(response.data));
-                Navigate('/');
+                localStorage.setItem('user', JSON.stringify(response.data));
+                window.location.href ='/'
             }
             
             if(response.data.emailErr){

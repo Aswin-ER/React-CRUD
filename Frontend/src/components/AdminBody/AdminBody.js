@@ -75,10 +75,12 @@ function AdminBody() {
         })
     }, [updateUI]);
 
+    
     //Search
     const handleSearch = () => {
         axiosInstance.post(`${adminBaseUrl}/search`, { search: search }).then((response) => {
-            if(response.data.users.length>=1){
+            console.log(response,"serach response")
+            if(response.data.length>=1){
                 dispatch(AdminUsersFetchSuccess(response.data.users));
             }else {
                 dispatch(getUsers());
@@ -106,7 +108,7 @@ function AdminBody() {
     const handleDelete = (id) => {
         axiosInstance.get(`${adminBaseUrl}/deleteUser/${id}`)
             .then((res) => {
-                console.log(res)
+                console.log(res,"response vanuuuuuu");
                 setUpdateUI((prevState) => !prevState)
                 handleCloseDelete(id);
             })
@@ -116,7 +118,6 @@ function AdminBody() {
     const handleAdd = () => {
         axiosInstance.post(`${userBaseUrl}/signup`, { name: name, phone: phone, email: email, password: password })
             .then((res) => {
-                dispatch(getUsers());
                 console.log(res.data)
                 setName('')
                 setPhone('')
@@ -179,8 +180,9 @@ function AdminBody() {
                     <button onClick={handleSearch} type='button' className="btn btn-primary">
                         Search
                     </button>
+                    <span style={{ marginLeft: '12px' }}></span>
                     {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a onClick={() => { setUpdateUI((prevState) => !prevState) }} className="mr-5 btn btn-primary" >
+                    <a onClick={() => { setUpdateUI((prevState) => !prevState) }} className="btn btn-primary" >
                         Show All users
                     </a>
                 </div>

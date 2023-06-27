@@ -29,20 +29,29 @@ module.exports = {
         const users=await userModel.find().exec();
         res.send(users)
     },
+    // const user = await userModel.findByIdAndUpdate(id, { name, email, phone }, { new: true });
 
     editUser: async (req, res) => {
         const { id } = req.params;
         console.log(req.body)
         const { name, email, phone } = req.body;
+        let user;
       
         try {
-          const user = await userModel.findByIdAndUpdate(id, { name, email, phone }, { new: true });
+          if(name.length !== 0){
+            user = await userModel.findByIdAndUpdate(id, {name}, { new: true });
+          }else if( email.length !== 0){
+            user = await userModel.findByIdAndUpdate(id, {email}, { new: true });
+          }else{
+            user = await userModel.findByIdAndUpdate(id, {phone}, { new: true });
+          }
       
           if (!user) {
             return res.status(404).send('User not found');
           }
       
           res.status(200).send(user);
+
         } catch (error) {
           console.error(error);
           res.status(500).send('Internal Server Error');
