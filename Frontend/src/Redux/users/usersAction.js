@@ -1,4 +1,4 @@
-import { FETCH_USERS_FAILURE, FETCH_USERS_SUCCESS, UPDATE_PROFILE_PIC } from './userTypes';
+import { FETCH_USERS_FAILURE, FETCH_USERS_SUCCESS } from './userTypes';
 
 export const usersFetchSuccess=(users)=>{
     return {
@@ -13,10 +13,4 @@ export const usersFetchFailure=(error)=>{
     }
 }
 
-export const updateUserProfilePic = (profilePic) => {
-    return {
-        type: UPDATE_PROFILE_PIC,
-        payload: profilePic
-    };
-};
 

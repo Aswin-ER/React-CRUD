@@ -1,4 +1,4 @@
-import { FETCH_USERS_FAILURE, FETCH_USERS_SUCCESS, UPDATE_PROFILE_PIC } from "./userTypes"
+import { FETCH_USERS_FAILURE, FETCH_USERS_SUCCESS } from "./userTypes"
 
 const initialState = {
     users : [],
@@ -19,11 +19,6 @@ const usersReducer=(state=initialState, action)=>{
                 users: [],
                 error: action.payload
             }
-
-        case UPDATE_PROFILE_PIC:
-            return {
-                profilePic: action.payload
-            };
                 
         default: return state
     }

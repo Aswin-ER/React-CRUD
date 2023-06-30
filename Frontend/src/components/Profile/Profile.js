@@ -2,10 +2,9 @@
 import React, { useEffect, useState } from 'react'
 import './Profile.css'
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { axiosInstance } from '../../axios';
 import { userBaseUrl } from '../../utils/const';
-import { updateUserProfilePic } from '../../Redux/users/usersAction'; // Import the action from your userActions file
 
 
 
@@ -13,10 +12,10 @@ export default function Profile() {
 
     const user = useSelector(value => value.users?.users?.data);
 
-    const dispatch = useDispatch();
-
     const handleImageUpload = async (data) => {
         const userId = user._id;
+
+        console.log(userId,"userId here");
         
         try {
 
@@ -28,7 +27,6 @@ export default function Profile() {
                 if (response.data.success) {
                     console.log(response.data, "image uploaded successfully");
                     console.log(response.data.filename, "image uploaded successfully");
-                    dispatch(updateUserProfilePic(response.data.filename));
                     setProfilePic(response.data.path);
                     window.location.href = '/profile'
                 } else {    

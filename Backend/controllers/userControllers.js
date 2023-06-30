@@ -59,7 +59,6 @@ module.exports = {
     getUser: async (req, res) => {
 
         console.log("working....", req.body.userId);
-
         try {
             const user = await userModel.findById({ _id: req.body.userId });
             console.log(user);
@@ -78,13 +77,9 @@ module.exports = {
 
 
     logout: (req, res) => {
-
         console.log("reached here");
-
         const blacklist = [];
-
         const token = req.headers.authorization || req.body.token;
-
         console.log(token, "token vanuuu da logout avum ini");
         blacklist.push(token);
         res.send({ success: true, message: 'Logged out successfully' });

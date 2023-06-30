@@ -1,4 +1,3 @@
-const adminModel = require("../Models/admin");
 const userModel = require("../Models/user");
 const jwt = require("jsonwebtoken");
 
@@ -25,11 +24,11 @@ module.exports = {
 
     },
 
+
     getUser: async (req, res)=> {
         const users=await userModel.find().exec();
         res.send(users)
     },
-    // const user = await userModel.findByIdAndUpdate(id, { name, email, phone }, { new: true });
 
     editUser: async (req, res) => {
         const { id } = req.params;
@@ -76,8 +75,8 @@ module.exports = {
         }
       },
 
-      searchUser: async (req, res)=> {
 
+      searchUser: async (req, res)=> {
         const  name = req.body.search;
         console.log(name);
         try {
@@ -90,12 +89,10 @@ module.exports = {
         
       },
 
+
       logout:(req, res)=> {
-
         const blacklist = [];
-
         const token = req.headers.authorization || req.body.token;
-
         console.log(token, "token admin log out avum");
         blacklist.push(token);
         res.send({ success: true, message:'Logged out successfully'});
