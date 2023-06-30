@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post('/signup',  userControllers.signUp);
 router.post('/login',  userControllers.LogIn);
-router.post('/logout',  userControllers.logout);
+// router.post('/logout',  userControllers.logout);
 
 router.get('/', userAuth, userControllers.getUser);
 

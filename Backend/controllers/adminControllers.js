@@ -12,7 +12,7 @@ module.exports = {
             if(admin.password === req.body.password){
                 let token;
                 token = jwt.sign({
-                    adminId: admin.password}, process.env.JWT_SECRET,{expiresIn: "1h"}
+                    adminId: admin.password}, 'react',{expiresIn: "1h"}
                     );
                 res.send({success: true, token: token}); 
             }else{
@@ -90,12 +90,12 @@ module.exports = {
       },
 
 
-      logout:(req, res)=> {
-        const blacklist = [];
-        const token = req.headers.authorization || req.body.token;
-        console.log(token, "token admin log out avum");
-        blacklist.push(token);
-        res.send({ success: true, message:'Logged out successfully'});
-      }
+      // logout:(req, res)=> {
+      //   const blacklist = [];
+      //   const token = req.headers.authorization || req.body.token;
+      //   console.log(token, "token admin log out avum");
+      //   blacklist.push(token);
+      //   res.send({ success: true, message:'Logged out successfully'});
+      // }
 
 }

@@ -76,14 +76,14 @@ module.exports = {
     },
 
 
-    logout: (req, res) => {
-        console.log("reached here");
-        const blacklist = [];
-        const token = req.headers.authorization || req.body.token;
-        console.log(token, "token vanuuu da logout avum ini");
-        blacklist.push(token);
-        res.send({ success: true, message: 'Logged out successfully' });
-    },
+    // logout: (req, res) => {
+    //     console.log("reached here");
+    //     const blacklist = [];
+    //     const token = req.headers.authorization || req.body.token;
+    //     console.log(token, "token vanuuu da logout avum ini");
+    //     blacklist.push(token);
+    //     res.send({ success: true, message: 'Logged out successfully' });
+    // },
 
 
     uploadProfilepic: async (req, res) => {
